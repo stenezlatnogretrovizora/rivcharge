@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id              String           @id @default(cuid())
+  name            String?
+  email           String?          @unique
+  emailVerified   DateTime?
+  image           String?
+  role            Role             @default(USER)
+  sessions        Session[]
+  bookingRequests BookingRequest[]
+  Queue           Queue[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model ChargingSlot {
+  id        String          @id @default(cuid())
+  date      DateTime
+  location  String
+  available Boolean         @default(true)
+  booking   BookingRequest?
+  queue     Queue[]
+
+  @@unique([date, location])
+}
+
+model BookingRequest {
+  id             String        @id @default(cuid())
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  chargingSlot   ChargingSlot  @relation(fields: [chargingSlotId], references: [id], onDelete: Cascade)
+  chargingSlotId String
+  date           DateTime
+  location       String
+  status         BookingStatus @default(PENDING)
+  createdAt      DateTime      @default(now())
+
+  @@unique([chargingSlotId])
+}
+
+model Queue {
+  id             String       @id @default(cuid())
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  chargingSlot   ChargingSlot @relation(fields: [chargingSlotId], references: [id], onDelete: Cascade)
+  chargingSlotId String
+  createdAt      DateTime     @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  QUEUED
+  CANCELLED
+}
