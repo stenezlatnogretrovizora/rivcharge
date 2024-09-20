@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from "~/server/db/db";
+import { db } from "~/utils/db";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
 
   if (req.method === 'GET') {
     try {
-      const slot = await db.chargingSlot.findUnique({
+      const slot = await db.bookingRequest.findUnique({
         where: { id: id as string },
       });
 
@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { date, location, available } = req.body;
 
     try {
-      const updatedSlot = await db.chargingSlot.update({
+      const updatedSlot = await db.bookingRequest.update({
         where: { id: id as string },
         data: {
           ...(date && { date: new Date(date) }),

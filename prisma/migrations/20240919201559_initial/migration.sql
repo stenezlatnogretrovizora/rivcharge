@@ -2,7 +2,7 @@
 CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 
 -- CreateEnum
-CREATE TYPE "BookingStatus" AS ENUM ('PENDING', 'CONFIRMED', 'QUEUED', 'CANCELLED');
+CREATE TYPE "BookingStatus" AS ENUM ('CONFIRMED', 'CANCELLED');
 
 -- CreateTable
 CREATE TABLE "Session" (
@@ -34,36 +34,49 @@ CREATE TABLE "VerificationToken" (
 );
 
 -- CreateTable
-CREATE TABLE "ChargingSlot" (
+CREATE TABLE "Location" (
     "id" TEXT NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
-    "location" TEXT NOT NULL,
-    "available" BOOLEAN NOT NULL DEFAULT true,
+    "city" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
+    "latitude" DOUBLE PRECISION NOT NULL,
+    "longitude" DOUBLE PRECISION NOT NULL,
 
-    CONSTRAINT "ChargingSlot_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Charger" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "colour" TEXT NOT NULL,
+    "locationId" TEXT NOT NULL,
+
+    CONSTRAINT "Charger_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "BookingRequest" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "chargingSlotId" TEXT NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
-    "location" TEXT NOT NULL,
-    "status" "BookingStatus" NOT NULL DEFAULT 'PENDING',
+    "chargerId" TEXT NOT NULL,
+    "startTime" TIMESTAMP(3) NOT NULL,
+    "endTime" TIMESTAMP(3) NOT NULL,
+    "status" "BookingStatus" NOT NULL DEFAULT 'CONFIRMED',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "BookingRequest_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Queue" (
+CREATE TABLE "QueueEntry" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "chargingSlotId" TEXT NOT NULL,
+    "locationId" TEXT NOT NULL,
+    "startTime" TIMESTAMP(3) NOT NULL,
+    "endTime" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Queue_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "QueueEntry_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -79,22 +92,19 @@ CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token"
 CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ChargingSlot_date_location_key" ON "ChargingSlot"("date", "location");
-
--- CreateIndex
-CREATE UNIQUE INDEX "BookingRequest_chargingSlotId_key" ON "BookingRequest"("chargingSlotId");
+CREATE UNIQUE INDEX "Location_city_country_key" ON "Location"("city", "country");
 
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Charger" ADD CONSTRAINT "Charger_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "Location"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "BookingRequest" ADD CONSTRAINT "BookingRequest_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "BookingRequest" ADD CONSTRAINT "BookingRequest_chargingSlotId_fkey" FOREIGN KEY ("chargingSlotId") REFERENCES "ChargingSlot"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "BookingRequest" ADD CONSTRAINT "BookingRequest_chargerId_fkey" FOREIGN KEY ("chargerId") REFERENCES "Charger"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Queue" ADD CONSTRAINT "Queue_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Queue" ADD CONSTRAINT "Queue_chargingSlotId_fkey" FOREIGN KEY ("chargingSlotId") REFERENCES "ChargingSlot"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "QueueEntry" ADD CONSTRAINT "QueueEntry_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

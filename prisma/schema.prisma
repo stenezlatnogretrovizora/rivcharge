@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -27,7 +24,7 @@ model User {
   role            Role             @default(USER)
   sessions        Session[]
   bookingRequests BookingRequest[]
-  Queue           Queue[]
+  queueEntries    QueueEntry[]
 }
 
 model VerificationToken {
@@ -38,38 +35,46 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model ChargingSlot {
-  id        String          @id @default(cuid())
-  date      DateTime
-  location  String
-  available Boolean         @default(true)
-  booking   BookingRequest?
-  queue     Queue[]
+model Location {
+  id        String    @id @default(cuid())
+  city      String
+  country   String
+  latitude  Float
+  longitude Float
+  chargers  Charger[]
 
-  @@unique([date, location])
+  @@unique([city, country])
+}
+
+model Charger {
+  id         String           @id @default(cuid())
+  name       String
+  colour     String
+  locationId String
+  location   Location         @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  bookings   BookingRequest[]
 }
 
 model BookingRequest {
-  id             String        @id @default(cuid())
-  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
-  chargingSlot   ChargingSlot  @relation(fields: [chargingSlotId], references: [id], onDelete: Cascade)
-  chargingSlotId String
-  date           DateTime
-  location       String
-  status         BookingStatus @default(PENDING)
-  createdAt      DateTime      @default(now())
-
-  @@unique([chargingSlotId])
+  id        String        @id @default(cuid())
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  charger   Charger       @relation(fields: [chargerId], references: [id], onDelete: Cascade)
+  chargerId String
+  startTime DateTime
+  endTime   DateTime
+  status    BookingStatus @default(CONFIRMED)
+  createdAt DateTime      @default(now())
 }
 
-model Queue {
-  id             String       @id @default(cuid())
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
-  chargingSlot   ChargingSlot @relation(fields: [chargingSlotId], references: [id], onDelete: Cascade)
-  chargingSlotId String
-  createdAt      DateTime     @default(now())
+model QueueEntry {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  locationId String
+  startTime  DateTime
+  endTime    DateTime
+  createdAt  DateTime @default(now())
 }
 
 enum Role {
@@ -78,8 +83,6 @@ enum Role {
 }
 
 enum BookingStatus {
-  PENDING
   CONFIRMED
-  QUEUED
   CANCELLED
 }
