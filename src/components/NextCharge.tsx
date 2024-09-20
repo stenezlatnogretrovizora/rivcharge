@@ -8,10 +8,10 @@ type ChargerSlot = {
   id: string;
   userId: string;
   chargerId: string;
-  startTime: string; // ISO date format (string representation of a date)
-  endTime: string;   // ISO date format (string representation of a date)
-  status: 'CONFIRMED' | 'CANCELLED' | 'PENDING'; // Assuming these are the possible statuses
-  createdAt: string; // ISO date format (string representation of a date)
+  startTime: string;
+  endTime: string;
+  status: 'CONFIRMED' | 'CANCELLED' | 'PENDING';
+  createdAt: string;
   user: {
     name: string;
   };
@@ -29,7 +29,6 @@ type ChargerSlot = {
 
 export default function NextCharge() {
   const session = useSession().data as Session & { user: { id: string } };
-  const { getClosestLocation } = useLocation();
   let [upcomingCharge, setUpcomingCharge] = useState<ChargerSlot>();
 
   useEffect(() => {

@@ -36,7 +36,7 @@ const ChargingMap: React.FC = () => {
 
   return (
     <>
-      <LoadScript googleMapsApiKey="AIzaSyD2oSV_ZMee7qxTmrT76SNhoCSELBVvaa4" >
+      <LoadScript googleMapsApiKey="" >
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
           center={{ lat: location.latitude, lng: location.longitude }}

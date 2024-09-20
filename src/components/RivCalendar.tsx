@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import dayGridPlugin from '@fullcalendar/daygrid'
-import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
+import resourceTimelinePlugin from '@fullcalendar/resource-timegrid'
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useLocation } from "~/contexts/LocationContext";
@@ -79,7 +79,7 @@ export default function RivCalendar({ onSlotSelect }: any) {
     fetchChargers();
   }, []);
 
-  const handleDateClick = (arg: { date: Date }) => {
+  const handleDateClick = (arg: any) => {
     // remove any previous unsaved events
     setBookedSlots((prevSlots) =>
       prevSlots.filter((slot) => !slot.editable)
@@ -95,7 +95,7 @@ export default function RivCalendar({ onSlotSelect }: any) {
       title: title,
       start: arg.date,
       end: addHours(arg.date, 1),
-      resourceId: 'Charger A',
+      resourceId: arg.resource.id,
       editable: true,
     };
 
@@ -104,7 +104,6 @@ export default function RivCalendar({ onSlotSelect }: any) {
   };
 
   const handleEventChange = (info: any) => {
-    console.log(info.event.start)
     onSlotSelect({ start: info.event.start, end: info.event.end })
   }
 
@@ -122,7 +121,7 @@ export default function RivCalendar({ onSlotSelect }: any) {
     <div className={"w-2/3 bg-white"}>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, resourceTimelinePlugin]}
-        initialView="resourceTimelineWeek"
+        initialView="resourceTimeGridDay"
         eventMaxStack={chargers.length}
         nowIndicator={true}
         slotDuration={'00:30:00'}

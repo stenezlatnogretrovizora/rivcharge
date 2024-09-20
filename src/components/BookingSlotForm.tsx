@@ -46,7 +46,6 @@ const BookingSlotForm = ({ selectedRange }: { selectedRange: SelectedRange }) =>
     e.preventDefault();
 
     if (!isFormValid) {
-      console.error('Form is not valid');
       return;
     }
 
@@ -80,7 +79,6 @@ const BookingSlotForm = ({ selectedRange }: { selectedRange: SelectedRange }) =>
         setBookingStatus('Failed to book the slot. Please try again later.');
       }
     } catch (error) {
-      console.error('An error occurred:', error);
       setBookingStatus('An error occurred. Please try again later.');
     }
   };
