@@ -1,6 +1,7 @@
-import { signIn, useSession } from 'next-auth/react';
 import { useEffect } from "react";
+import Image from 'next/image';
 import { useRouter } from "next/router";
+import { signIn, useSession } from 'next-auth/react';
 
 export default function LoginPage() {
   const { status } = useSession();
@@ -16,13 +17,14 @@ export default function LoginPage() {
     return <div>Loading...</div>;
   }
 
-
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
+        <Image
           alt="RivCharge Logo"
-          src="./logo.png" // todo@urk: change this logo
+          src="/logo.png"
+          width={250}
+          height={100}
           className="mx-auto h-10 w-auto"
         />
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">

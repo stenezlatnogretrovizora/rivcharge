@@ -1,30 +1,10 @@
-import React, { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { getChargingLocations } from "~/utils/locationUtils";
-
-interface Location {
-  id: string;
-  city: string;
-  country: string;
-  latitude: number;
-  longitude: number;
-}
-
-interface LocationCoordinates {
-  latitude: number;
-  longitude: number;
-}
-
-interface LocationContextType {
-  location: LocationCoordinates;
-  chargingLocations: Location[];
-  setLocation: Dispatch<SetStateAction<LocationCoordinates>>;
-  getClosestLocation: () => Location | null;
-}
+import type { Location, LocationContextType } from "~/types/locations";
 
 const LocationContext = createContext<LocationContextType>({
   location: { latitude: 0, longitude: 0 },
   chargingLocations: [],
-  setLocation: () => {},
   getClosestLocation: (): Location | null => { return null; }
 });
 
@@ -87,7 +67,7 @@ export const LocationProvider = ({ children }: React.PropsWithChildren) => {
 
 
   return (
-    <LocationContext.Provider value={{ location, setLocation, chargingLocations, getClosestLocation }}>
+    <LocationContext.Provider value={{ location, chargingLocations, getClosestLocation }}>
       {children}
     </LocationContext.Provider>
   );

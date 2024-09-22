@@ -1,4 +1,6 @@
-export async function getChargingLocations(latitude: number, longitude: number) {
+import type { Location } from '~/types/locations';
+
+export async function getChargingLocations(latitude: number, longitude: number): Promise<Location[]> {
   const response = await fetch('/api/locations', {
     method: 'POST',
     headers: {
@@ -11,5 +13,5 @@ export async function getChargingLocations(latitude: number, longitude: number) 
     throw new Error('Failed to fetch closest location');
   }
 
-  return await response.json();
+  return await response.json() as Location[];
 }

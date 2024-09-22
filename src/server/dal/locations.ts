@@ -1,12 +1,5 @@
 import { db } from "~/utils/db";
-
-interface Location {
-  id: string;
-  city: string;
-  country: string;
-  latitude: number;
-  longitude: number;
-}
+import type { Location } from "~/types/locations";
 
 export async function getLocations(): Promise<Location[]> {
   return db.location.findMany();

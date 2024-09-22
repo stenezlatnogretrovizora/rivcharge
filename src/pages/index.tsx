@@ -4,10 +4,11 @@ import { useRouter } from "next/router";
 import NextCharge from "~/components/NextCharge";
 import RivCalendar from "~/components/RivCalendar";
 import BookingSlotForm from "~/components/BookingSlotForm";
+import type { SelectedSlot } from "~/types/slots";
 
 export default function Home() {
   const { data: session, status } = useSession();
-  const [selectedRange, setSelectedRange] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState<SelectedSlot | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -28,12 +29,12 @@ export default function Home() {
     <>
       <div className="flex flex-col lg:flex-row items-center justify-center flex-1">
         <div className="flex flex-col lg:ml-6 lg:mt-0 mt-6">
-          <NextCharge />
-          {selectedRange && (
-            <BookingSlotForm selectedRange={selectedRange}/>
+          <NextCharge/>
+          {selectedSlot && (
+            <BookingSlotForm selectedSlot={selectedSlot}/>
           )}
         </div>
-        <RivCalendar onSlotSelect={setSelectedRange}/>
+        <RivCalendar onSlotSelect={setSelectedSlot}/>
       </div>
     </>
   );

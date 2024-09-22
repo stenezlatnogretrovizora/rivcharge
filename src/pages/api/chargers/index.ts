@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { getChargers } from "~/dal/chargers";
+import { type NextApiRequest, type NextApiResponse } from "next";
+import { getChargers } from "~/server/dal/chargers";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {

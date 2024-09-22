@@ -4,8 +4,9 @@ import { SessionProvider } from "next-auth/react";
 import "~/styles/globals.css";
 import { LocationProvider } from "~/contexts/LocationContext";
 import SidebarComponent from "~/components/Sidebar";
+import { type Session } from "next-auth";
 
-const MyApp: AppType = ({ Component, pageProps: { session, ...pageProps } }: any) => {
+const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <SessionProvider session={session}>
       <LocationProvider>

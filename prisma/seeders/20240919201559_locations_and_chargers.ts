@@ -1,11 +1,11 @@
 import { db } from '~/utils/db';
 import { addHours, startOfToday } from "date-fns";
 
-let userNames = ['Alice Johnson', 'Bob Smith', 'Carol Davis', 'David Wilson', 'Emma Brown', 'Frank Miller', 'Grace Lee', 'Henry Taylor', 'Ivy Martinez', 'Jack Anderson', 'Karen White', 'Liam Harris', 'Mia Clark', 'Noah Robinson', 'Olivia Scott', 'Peter Young', 'Quinn Adams', 'Rachel Turner']
+const userNames = ['Alice Johnson', 'Bob Smith', 'Carol Davis', 'David Wilson', 'Emma Brown', 'Frank Miller', 'Grace Lee', 'Henry Taylor', 'Ivy Martinez', 'Jack Anderson', 'Karen White', 'Liam Harris', 'Mia Clark', 'Noah Robinson', 'Olivia Scott', 'Peter Young', 'Quinn Adams', 'Rachel Turner']
 
 export async function main() {
-  let users = userNames.map((name, index) => {
-    let image = 'https://randomuser.me/api/portraits/' + ((index % 2 === 0) ? "women" : "men") + "/" + index + ".jpg";
+  const users = userNames.map((name, index) => {
+    const image = 'https://randomuser.me/api/portraits/' + ((index % 2 === 0) ? "women" : "men") + "/" + index + ".jpg";
 
     return {
       id: (index + 1).toString(),
@@ -14,8 +14,6 @@ export async function main() {
       image
     }
   })
-
-  users.unshift({ id: 'uros', name: 'Uros Radovanovic', email: 'radovanovic.uros92@gmail.com', image: "" })
 
   await db.user.createMany({
     data: users
@@ -30,52 +28,58 @@ export async function main() {
         longitude: 20.4489,
       },
       {
-        city: 'San Francisco',
+        city: 'Palo Alto',
         country: 'United States',
-        latitude: 37.7749,
-        longitude: -122.4194,
+        latitude: 37.4419,
+        longitude: -122.1430,
       },
       {
-        city: 'Los Angeles',
+        city: 'Irvine',
         country: 'United States',
-        latitude: 34.0522,
-        longitude: -118.2437,
+        latitude: 33.6846,
+        longitude: -117.8265,
       },
       {
-        city: 'New York',
+        city: 'Carson',
         country: 'United States',
-        latitude: 40.7128,
-        longitude: -74.0060,
+        latitude: 33.8317,
+        longitude: -118.2820,
       },
       {
-        city: 'London',
+        city: 'Wittmann',
+        country: 'United States',
+        latitude: 33.7789,
+        longitude: -112.5282,
+      },
+      {
+        city: 'Normal',
+        country: 'United States',
+        latitude: 40.5142,
+        longitude: -88.9906,
+      },
+      {
+        city: 'Plymouth',
+        country: 'United States',
+        latitude: 42.3714,
+        longitude: -83.4702,
+      },
+      {
+        city: 'Vancouver',
+        country: 'Canada',
+        latitude: 49.2827,
+        longitude: -123.1207,
+      },
+      {
+        city: 'Woking',
         country: 'United Kingdom',
-        latitude: 51.5074,
-        longitude: -0.1278,
+        latitude: 51.3190,
+        longitude: -0.5576,
       },
       {
-        city: "Amsterdam",
-        country: "Netherlands",
+        city: 'Amsterdam',
+        country: 'Netherlands',
         latitude: 52.3676,
-        longitude: 4.9041
-      },
-      {
-        city: 'Berlin',
-        country: 'Germany',
-        latitude: 52.5200,
-        longitude: 13.4050,
-      },
-      {
-        city: 'Tokyo',
-        country: 'Japan',
-        latitude: 35.6895,
-        longitude: 139.6917,
-      },
-      {
-        city: 'Sydney',
-        country: 'Australia',
-        latitude: -33.8688,
-        longitude: 151.2093,
+        longitude: 4.9041,
       }
     ],
   });
@@ -90,7 +94,7 @@ export async function main() {
     const numChargers = Math.floor(Math.random() * 5) + 3; // Random number of chargers between 3 and 7
     const chargers = Array.from({ length: numChargers }, (_, i) => ({
       name: `${location.city} Charger ${i + 1}`,
-      colour: colours[i] as string,
+      colour: colours[i]!,
       locationId: location.id,
     }));
 
@@ -100,46 +104,39 @@ export async function main() {
   }
 
   const slots = [
-    { title: 'Alice Johnson', start: addHours(startOfToday(), 9), end: addHours(startOfToday(), 12), editable: false },
-    { title: 'Bob Smith', start: addHours(startOfToday(), 13), end: addHours(startOfToday(), 16), editable: false },
-    { title: 'Carol Davis', start: addHours(startOfToday(), 17), end: addHours(startOfToday(), 20), editable: false },
-    { title: 'David Wilson', start: addHours(startOfToday(), 8), end: addHours(startOfToday(), 11), editable: false },
-    { title: 'Emma Brown', start: addHours(startOfToday(), 12), end: addHours(startOfToday(), 15), editable: false },
-    { title: 'Frank Miller', start: addHours(startOfToday(), 16), end: addHours(startOfToday(), 19), editable: false },
-    { title: 'Grace Lee', start: addHours(startOfToday(), -14), end: addHours(startOfToday(), -11), editable: false },
-    { title: 'Henry Taylor', start: addHours(startOfToday(), -10), end: addHours(startOfToday(), -7), editable: false },
-    { title: 'Ivy Martinez', start: addHours(startOfToday(), 34), end: addHours(startOfToday(), 37), editable: false },
-    { title: 'Jack Anderson', start: addHours(startOfToday(), 38), end: addHours(startOfToday(), 41), editable: false },
-    { title: 'Karen White', start: addHours(startOfToday(), 42), end: addHours(startOfToday(), 45), editable: false },
-    { title: 'Liam Harris', start: addHours(startOfToday(), 46), end: addHours(startOfToday(), 49), editable: false },
-    { title: 'Mia Clark', start: addHours(startOfToday(), -38), end: addHours(startOfToday(), -35), editable: false },
-    {
-      title: 'Noah Robinson',
-      start: addHours(startOfToday(), -34),
-      end: addHours(startOfToday(), -31),
-      editable: false
-    },
-    { title: 'Olivia Scott', start: addHours(startOfToday(), 58), end: addHours(startOfToday(), 61), editable: false },
-    { title: 'Peter Young', start: addHours(startOfToday(), 62), end: addHours(startOfToday(), 65), editable: false },
-    { title: 'Quinn Adams', start: addHours(startOfToday(), 66), end: addHours(startOfToday(), 69), editable: false },
-    { title: 'Rachel Turner', start: addHours(startOfToday(), 70), end: addHours(startOfToday(), 73), editable: false },
-    {
-      title: "Uros Radovanovic",
-      start: addHours(startOfToday(), 74),
-      end: addHours(startOfToday(), 77),
-      editable: false
-    }
+    { start: addHours(startOfToday(), 9), end: addHours(startOfToday(), 12) },
+    { start: addHours(startOfToday(), 13), end: addHours(startOfToday(), 16) },
+    { start: addHours(startOfToday(), 17), end: addHours(startOfToday(), 20) },
+    { start: addHours(startOfToday(), 8), end: addHours(startOfToday(), 11) },
+    { start: addHours(startOfToday(), 12), end: addHours(startOfToday(), 15) },
+    { start: addHours(startOfToday(), 16), end: addHours(startOfToday(), 19) },
+    { start: addHours(startOfToday(), -14), end: addHours(startOfToday(), -11) },
+    { start: addHours(startOfToday(), -10), end: addHours(startOfToday(), -7) },
+    { start: addHours(startOfToday(), 34), end: addHours(startOfToday(), 37) },
+    { start: addHours(startOfToday(), 38), end: addHours(startOfToday(), 41) },
+    { start: addHours(startOfToday(), 42), end: addHours(startOfToday(), 45) },
+    { start: addHours(startOfToday(), 46), end: addHours(startOfToday(), 49) },
+    { start: addHours(startOfToday(), -38), end: addHours(startOfToday(), -35) },
+    { start: addHours(startOfToday(), -34), end: addHours(startOfToday(), -31) },
+    { start: addHours(startOfToday(), 58), end: addHours(startOfToday(), 61) },
+    { start: addHours(startOfToday(), 62), end: addHours(startOfToday(), 65) },
+    { start: addHours(startOfToday(), 66), end: addHours(startOfToday(), 69) },
+    { start: addHours(startOfToday(), 70), end: addHours(startOfToday(), 73) },
+    { start: addHours(startOfToday(), 74), end: addHours(startOfToday(), 77) }
   ]
 
-  // get one charger id
-  const charger = await db.charger.findMany({ where: { location: allLocations[0] } });
+  const dbUserIds = await db.user.findMany({ select: { id: true } });
+  const userIds = dbUserIds.map(user => user.id);
+
+  const dbChargerIds = await db.charger.findMany({ select: { id: true }, where: { location: { city: "Belgrade" } } });
+  const chargerIds = dbChargerIds.map(charger => charger.id);
+
   for (const slot of slots) {
     await db.bookingRequest.create({
       data: {
         status: 'CONFIRMED',
-        userId: users[Math.floor(Math.random() * users.length)]?.id as string,
-        // random charger between the chargers
-        chargerId: charger[Math.floor(Math.random() * charger.length)]?.id as string,
+        userId: userIds[Math.floor(Math.random() * userIds.length)]!,
+        chargerId: chargerIds[Math.floor(Math.random() * chargerIds.length)]!,
         startTime: slot.start,
         endTime: slot.end,
       },

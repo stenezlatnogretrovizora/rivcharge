@@ -1,43 +1,25 @@
-import { Session } from "next-auth";
+/* eslint-disable */
+import type { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-import { useLocation } from "~/contexts/LocationContext";
 import { useEffect, useState } from "react";
 import { constructNow, differenceInMinutes } from "date-fns";
-
-type ChargerSlot = {
-  id: string;
-  userId: string;
-  chargerId: string;
-  startTime: string;
-  endTime: string;
-  status: 'CONFIRMED' | 'CANCELLED' | 'PENDING';
-  createdAt: string;
-  user: {
-    name: string;
-  };
-  charger: {
-    id: string;
-    name: string;
-    colour: string;
-    locationId: string;
-    location: {
-      city: string;
-      country: string;
-    };
-  };
-};
+import type { SlotExtended } from "~/types/slots";
 
 export default function NextCharge() {
   const session = useSession().data as Session & { user: { id: string } };
-  let [upcomingCharge, setUpcomingCharge] = useState<ChargerSlot>();
+  const [upcomingCharge, setUpcomingCharge] = useState<SlotExtended>();
 
   useEffect(() => {
     const fetchUpcomingCharge = async () => {
       const response = await fetch('/api/charging-slots/upcoming');
       const data = await response.json();
-      setUpcomingCharge(data);
+
+      if (response.ok) {
+        setUpcomingCharge(data);
+      }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchUpcomingCharge();
   }, []);
 
@@ -62,9 +44,9 @@ export default function NextCharge() {
       timeToChargeString = `${Math.floor(timeToCharge / 1440)} days, ${Math.floor((timeToCharge % 1440) / 60)} hours and ${timeToCharge % 60} minutes.`;
     }
 
-    let startTime = new Date(upcomingCharge?.startTime).toUTCString();
-    let endTime = new Date(upcomingCharge?.endTime).toUTCString();
-    let location = upcomingCharge.charger.location.city + ', ' +
+    const startTime = new Date(upcomingCharge?.startTime).toUTCString();
+    const endTime = new Date(upcomingCharge?.endTime).toUTCString();
+    const location = upcomingCharge.charger.location.city + ', ' +
       upcomingCharge.charger.location.country;
 
     component = (
@@ -91,7 +73,7 @@ export default function NextCharge() {
   }
 
   return (
-    <div className="flex justify-center items-center p-12">
+    <div className="flex justify-center items-center p-10">
       <div className="bg-white shadow-lg rounded-md p-6 max-w-md w-full">
         <h2 className="text-xl font-semibold text-[#07074D] mb-4">
           Hello {session?.user?.name}
