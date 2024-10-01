@@ -26,7 +26,7 @@ const ChargingSlotList = () => {
       setLoading(true);
       try {
         const response = await fetch('/api/charging-slots');
-        const fetchedSlots: Slot[] = await response.json();
+        const fetchedSlots = await response.json() as Slot[];
 
         // Categorize slots into previous and upcoming
         const now = new Date();
@@ -44,7 +44,7 @@ const ChargingSlotList = () => {
     };
 
     if (session) {
-      fetchSlots();
+      void fetchSlots();
     }
   }, [session]);
 

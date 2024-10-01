@@ -1,5 +1,5 @@
-# Use the official Node.js 16 image as a parent image
-FROM node:20-alpine
+# Use the official Node.js 20 image as a parent image
+FROM node:20
 
 # Set the working directory
 WORKDIR /app
@@ -7,11 +7,16 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Copy env file
+COPY .env .env
 
 # Copy the rest of app's source code
 COPY . .
+
+RUN npx prisma generate
+
+# Install dependencies
+RUN npm install
 
 # Build app
 RUN npm run build

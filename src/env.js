@@ -17,7 +17,6 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: z.string(),
     NEXTAUTH_URL: z.string().url(),
     NEXTAUTH_SECRET: z.string(),
-    NEXT_PUBLIC_OPENAI_API_KEY: z.string(),
     GOOGLE_MAPS_API_KEY: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -45,7 +44,6 @@ export const env = createEnv({
     GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    NEXT_PUBLIC_OPENAI_API_KEY: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
     DB_USER: process.env.DB_USER,
     DB_PASS: process.env.DB_PASS,
     DB_HOST: process.env.DB_HOST,

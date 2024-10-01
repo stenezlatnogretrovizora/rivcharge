@@ -1,5 +1,7 @@
+/* eslint-disable */
+
 import VoiceAssistant from "~/components/VoiceAssistant";
-import { BookedSlot, SelectedSlot } from "~/types/slots";
+import { type BookedSlot, type SelectedSlot } from "~/types/slots";
 import { useChargingData } from "~/hooks/useChargingData";
 import { useState } from "react";
 

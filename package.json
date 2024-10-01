@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "prisma": {
-    "seed": "tsx prisma/seeders/index.ts"
+    "seed": "tsx prisma/seeders/index.ts",
+    "schema": "prisma/schema.prisma"
   },
   "scripts": {
     "build": "next build",
